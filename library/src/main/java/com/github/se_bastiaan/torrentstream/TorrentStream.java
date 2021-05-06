@@ -82,7 +82,7 @@ public final class TorrentStream {
         public void torrentAdded(AddTorrentAlert alert) {
             InternalTorrentListener listener = new InternalTorrentListener();
             TorrentHandle th = torrentSession.find(alert.handle().infoHash());
-            currentTorrent = new Torrent(th, listener, torrentOptions.prepareSize);
+            currentTorrent = new Torrent(th, listener, torrentOptions.prepareSize, currentTorrentFile);
 
             torrentSession.addListener(currentTorrent);
         }
