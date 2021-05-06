@@ -167,9 +167,11 @@ public class Torrent implements AlertListener {
         TorrentInfo torrentInfo = torrentHandle.torrentFile();
         FileStorage fileStorage = torrentInfo.files();
         for (int i = 0; i < fileStorage.numFiles(); i++) {
-            String fileName = fileStorage.fileName(i);
             String filePath = fileStorage.filePath(i);
-            Log.d("FILES", file + " :: " + fileName + "::" + filePath);
+            if (filePath.endsWith(file)) {
+                Log.d("FILES", file + " ::" + filePath);
+                return i;
+            }
         }
         return -1;
     }
