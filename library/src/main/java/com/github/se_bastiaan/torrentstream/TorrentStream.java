@@ -21,14 +21,15 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
 
-import com.frostwire.jlibtorrent.Priority;
-import com.frostwire.jlibtorrent.SessionManager;
-import com.frostwire.jlibtorrent.SessionParams;
-import com.frostwire.jlibtorrent.SettingsPack;
-import com.frostwire.jlibtorrent.TorrentHandle;
-import com.frostwire.jlibtorrent.TorrentInfo;
-import com.frostwire.jlibtorrent.alerts.AddTorrentAlert;
-import com.frostwire.jlibtorrent.swig.settings_pack;
+import org.libtorrent4j.Priority;
+import org.libtorrent4j.SessionManager;
+import org.libtorrent4j.SessionParams;
+import org.libtorrent4j.SettingsPack;
+import org.libtorrent4j.TorrentHandle;
+import org.libtorrent4j.TorrentInfo;
+import org.libtorrent4j.alerts.AddTorrentAlert;
+import org.libtorrent4j.swig.settings_pack;
+import org.libtorrent4j.swig.torrent_flags_t;
 import com.github.se_bastiaan.torrentstream.exceptions.DirectoryModifyException;
 import com.github.se_bastiaan.torrentstream.exceptions.NotInitializedException;
 import com.github.se_bastiaan.torrentstream.exceptions.TorrentInfoException;
@@ -192,9 +193,9 @@ public final class TorrentStream {
      * @param torrentUrl {@link String} URL to .torrent or magnet link
      * @return {@link TorrentInfo}
      */
-    private TorrentInfo getTorrentInfo(String torrentUrl) throws TorrentInfoException {
+    private TorrentInfo getTorrentInfo(String torrentUrl, File tempFile) throws TorrentInfoException {
         if (torrentUrl.startsWith("magnet")) {
-            byte[] data = torrentSession.fetchMagnet(torrentUrl, 3000, true);
+            byte[] data = torrentSession.fetchMagnet(torrentUrl, 3000, tempFile);
             if (data != null)
                 try {
                     return TorrentInfo.bdecode(data);
@@ -325,7 +326,7 @@ public final class TorrentStream {
                 torrentSession.removeListener(torrentAddedAlertListener);
                 TorrentInfo torrentInfo = null;
                 try {
-                    torrentInfo = getTorrentInfo(torrentUrl);
+                    torrentInfo = getTorrentInfo(torrentUrl, saveDirectory);
                 } catch (final TorrentInfoException e) {
                     for (final TorrentListener listener : listeners) {
                         ThreadUtils.runOnUiThread(new Runnable() {
@@ -360,7 +361,7 @@ public final class TorrentStream {
                     return;
                 }
 
-                torrentSession.download(torrentInfo, saveDirectory, null, priorities, null);
+                torrentSession.download(torrentInfo, saveDirectory, null, priorities, null, new torrent_flags_t());
             }
         });
     }

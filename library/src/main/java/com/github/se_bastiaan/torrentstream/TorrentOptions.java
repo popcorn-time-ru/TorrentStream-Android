@@ -33,7 +33,7 @@ public final class TorrentOptions {
     Boolean removeFiles = false;
     Boolean anonymousMode = false;
     Boolean autoDownload = true;
-    Long prepareSize = 15 * 1024L * 1024L;
+    Long prepareSize = 20 * 1024L * 1024L;
 
     private TorrentOptions() {
         // Unused
