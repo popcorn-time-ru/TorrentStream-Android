@@ -41,45 +41,27 @@ android {
 }
 
 ext {
-    libtorrentVersion = '1.2.0.16'
     libtorrentVersion2 = '2.0.6-26';
 }
 
-// Custom task which downloads the appropriate version of JAR files for jlibtorrent
-task downloadDependencies(type: Download) {
-    def baseUrl = "https://repo1.maven.org/maven2/com/frostwire/jlibtorrent"
-
-    def platforms = ['arm', 'arm64', 'x86', 'x86_64']
-    def urls = platforms.collect { "$baseUrl-android-$it/${libtorrentVersion}/jlibtorrent-android-$it-${libtorrentVersion}.jar" }
-    urls.add("$baseUrl/${libtorrentVersion}/jlibtorrent-${libtorrentVersion}.jar")
-
-    src urls
-    dest 'libs'
-    overwrite false
-}
-
-// Add our custom task as a dependency to the build
-// You may need to run gradle sync for IDE warnings to disappear
-preBuild.dependsOn(downloadDependencies)
-
-// Add deletion of libs folder to clean task
-clean {
-    delete 'libs'
-}
+// // Custom task which downloads the appropriate version of JAR files for jlibtorrent
+// task downloadDependencies(type: Download) {
+//     def baseUrl = "https://repo1.maven.org/maven2/com/frostwire/jlibtorrent"
+// 
+//     def platforms = ['arm', 'arm64', 'x86', 'x86_64']
+//     def urls = platforms.collect { "$baseUrl-android-$it/${libtorrentVersion}/jlibtorrent-android-$it-${libtorrentVersion}.jar" }
+//     urls.add("$baseUrl/${libtorrentVersion}/jlibtorrent-${libtorrentVersion}.jar")
+// 
+//     src urls
+//     dest 'libs'
+//     overwrite false
+// }
+// 
+// // Add our custom task as a dependency to the build
+// // You may need to run gradle sync for IDE warnings to disappear
+// preBuild.dependsOn(downloadDependencies)
 
 dependencies {
-    // api files('libs/jlibtorrent-' + libtorrentVersion + '.jar')
-    // 
-    // // att free phones use this and crashes
-    // api files('libs/jlibtorrent-android-arm-' + libtorrentVersion + '.jar')
-    // 
-    // // oneplus hd1905 uses this
-    // api files('libs/jlibtorrent-android-arm64-' + libtorrentVersion + '.jar')
-    // 
-    // // used by android emulator on macos
-    // api files('libs/jlibtorrent-android-x86-' + libtorrentVersion + '.jar')
-    // 
-    // api files('libs/jlibtorrent-android-x86_64-' + libtorrentVersion + '.jar')
     api files('libs/libtorrent4j-' + libtorrentVersion2 + '.jar')
     api files('libs/libtorrent4j-android-arm-' + libtorrentVersion2 + '.jar')
     api files('libs/libtorrent4j-android-arm64-' + libtorrentVersion2 + '.jar')

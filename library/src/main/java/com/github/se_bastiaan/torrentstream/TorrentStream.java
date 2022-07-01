@@ -25,6 +25,7 @@ import org.libtorrent4j.Priority;
 import org.libtorrent4j.SessionManager;
 import org.libtorrent4j.SessionParams;
 import org.libtorrent4j.SettingsPack;
+import org.libtorrent4j.TorrentFlags;
 import org.libtorrent4j.TorrentHandle;
 import org.libtorrent4j.TorrentInfo;
 import org.libtorrent4j.alerts.AddTorrentAlert;
@@ -352,16 +353,10 @@ public final class TorrentStream {
                     return;
                 }
 
-                Priority[] priorities = new Priority[torrentInfo.numFiles()];
-                for (int i = 0; i < priorities.length; i++) {
-                    priorities[i] = Priority.IGNORE;
-                }
+                torrent_flags_t flags = new torrent_flags_t();
+                flags = flags.and_(TorrentFlags.SEQUENTIAL_DOWNLOAD).and_(TorrentFlags.AUTO_MANAGED);
 
-                if (!currentTorrentUrl.equals(torrentUrl) || isCanceled) {
-                    return;
-                }
-
-                torrentSession.download(torrentInfo, saveDirectory, null, priorities, null, new torrent_flags_t());
+                torrentSession.download(torrentInfo, saveDirectory, null, null, null, flags);
             }
         });
     }
